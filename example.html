@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Adagio Music Player - Demo</title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="adagioplayer.css" rel="stylesheet" />
+    <script type="text/javascript" src="adagioplayer.js"></script>
+    <script type="text/javascript">
+        var player = new AdagioPlayer({
+            songs : {
+                0: {'paths':
+                    {
+                        mp3 : '/Users/joshuawalker/Downloads/bloom.mp3',
+                        ogg : '/Users/joshuawalker/Downloads/bloom.mp3'
+                    }
+                },
+                1: {'paths':
+                    {
+                        mp3 : '/Users/joshuawalker/Downloads/bloom.mp3',
+                        ogg : '/Users/joshuawalker/Downloads/bloom.mp3'
+                    }
+                }
+            }
+        });
+        player.show();
+    </script>
+</head>
+<body>
+  <h1>Can't sit here... seats taken...</h1>
+</body>
+</html>
