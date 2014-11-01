@@ -1,6 +1,4 @@
-jquery.musicplayer
+Leneya - Adagio
 ==================
 
-A music player bullt on top of jQuery. Requires jQuery to run.
-
-Takes in a list of JSON objects that represent song information, including the path to relevant song files.
+A javascript package for a dynamic music player. Just download, call new AdagioPlayer, pass in JSON representations of your songs, and you will be good to go. WE HAVE JUST BEGUN DEVELOPMENT ON THIS.
