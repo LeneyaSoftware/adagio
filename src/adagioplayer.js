@@ -20,14 +20,6 @@ function AdagioPlayer(options){
   this.create();
 }
 
-AdagioPlayer.prototype.getSrc = function(){
-    var scripts= document.getElementsByTagName('script');
-    var path= scripts[scripts.length-1].src.split('?')[0];      // remove any ?query
-    var mydir= path.split('/').slice(0, -1).join('/')+'/';
-    console.log(mydir);
-    return mydir;
-}
-
 //play the current selected song
 AdagioPlayer.prototype.play = function(){
   var player = this.audioPlayer;
@@ -38,10 +30,12 @@ AdagioPlayer.prototype.play = function(){
 
 //switch to the previous song
 AdagioPlayer.prototype.previous = function(){
-  if(this.playing == 0)
+  if(this.playing == 0){
     this.playing = this.songs.length - 1;
-  else
+  }
+  else{
     this.playing--;
+  }
   this.updateSong();
 }
 
@@ -49,23 +43,25 @@ AdagioPlayer.prototype.previous = function(){
 //switch to the next song
 AdagioPlayer.prototype.next = function(){
   var length = this.songs.length;
-  if(this.playing+1 == length)
+  if(this.playing+1 == length){
     this.playing = 0;
-  else
+  }
+  else{
     this.playing++;
+  }
 
   this.updateSong();
 }
 
 //changes song from one song to anoher
 AdagioPlayer.prototype.updateSong = function(){
+    console.log(this.playing);
     var mp3 = document.getElementById('ap-mp3-source');
     var ogg = document.getElementById('ap-ogg-source');
     mp3.setAttribute('src',this.songs[this.playing].paths.mp3);
     ogg.setAttribute('src',this.songs[this.playing].paths.ogg);
 
     var player = this.audioPlayer;
-
     player.pause();
     player.load();
     player.play();
