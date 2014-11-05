@@ -16,17 +16,16 @@ function AdagioPlayer(options){
   this.elapsed = options.elapsed || 0; // the current time elapsed in the current song
   this.volume = options.volume || 50;
   this.audioPlayer = '';
+
+  this.create();
 }
 
 AdagioPlayer.prototype.getSrc = function(){
-    var scripts = document.getElementsByTagName('script'),
-        script = scripts[scripts.length - 1];
-
-    if (script.getAttribute.length !== undefined) {
-        return script.src
-    }
-
-    return script.getAttribute('src', -1)
+    var scripts= document.getElementsByTagName('script');
+    var path= scripts[scripts.length-1].src.split('?')[0];      // remove any ?query
+    var mydir= path.split('/').slice(0, -1).join('/')+'/';
+    console.log(mydir);
+    return mydir;
 }
 
 //play the current selected song
@@ -97,39 +96,51 @@ AdagioPlayer.prototype.addSong = function(song){
   this.songs.push(song);
 }
 
+AdagioPlayer.prototype.create = function(){
+    player = this;
+    if(document.addEventListener){
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log('one');
+            player.show();
+        });
+    }
+    else if(document.attachEvent){
+        document.attachEvent("onreadystatechange", function(){
+            if (document.readyState === "complete"){
+                console.log('two');
+                document.detachEvent( "onreadystatechange", arguments.callee );
+                player.show();
+            }
+        });
+    }
+}
+
 //append the music player to the end of the HTML body.
 AdagioPlayer.prototype.show = function(){
-    var xmlhttp;
-    var player = this;
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    var markup = '<div class="ap-player">';
+    markup += '<div class="ap-controls">';
+    markup +=    '<span id="ap-previous"><i class="fa fa-fast-backward"></i></span>';
+    markup +=    '<span id="ap-stop"><i class="fa fa-stop"></i></span>';
+    markup +=    '<span id="ap-play"><i class="fa fa-play"></i></span>';
+    markup +=    '<span id="ap-pause" class="hidden"><i class="fa fa-pause"></i></span>';
+    markup +=    '<span id="ap-next"><i class="fa fa-fast-forward"></i></span>';
+    markup += '</div>';
+    markup += '<div class="ap-now-playing"></div>';
+    markup += '<div class="ap-volume"></div>';
+    markup+=  '</div>';
+    markup+= '<audio controls class="ap-audio" id="ap-audio-player">';
+    markup+= '<source id="ap-mp3-source" src="" type="audio/mp3"/>';
+    markup+= '<source id="ap-ogg-source" src="" type="audio/ogg" />';
+    //markup for IE <= 8
+    markup+= '<embed src="" width="0" height="0" loop="false" autostart="false" class="ap-audio" />';
+    markup+= '</audio>';
 
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 ) {
-           if(xmlhttp.status == 200){
-               document.body.innerHTML = document.body.innerHTML + xmlhttp.responseText;
-               player.audioPlayer = document.getElementById('ap-audio-player');
-               player.attachActions();
-               player.updateSong();
-           }
-           else if(xmlhttp.status == 400) {
-              alert('There was an error 400')
-           }
-           else {
-               alert('something else other than 200 was returned')
-           }
-        }
-    }
-
-    console.log(player.getSrc());
-    xmlhttp.open("GET", player.getSrc()+"adagioplayer.html", true);
-    xmlhttp.send();
+    document.body.innerHTML = document.body.innerHTML + markup;
+    this.audioPlayer = document.getElementById('ap-audio-player');
+    this.attachActions();
+    this.updateSong();
 }
+
 
 AdagioPlayer.prototype.attachActions = function(){
     var player = this;
