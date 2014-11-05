@@ -55,7 +55,6 @@ AdagioPlayer.prototype.next = function(){
 
 //changes song from one song to anoher
 AdagioPlayer.prototype.updateSong = function(){
-    console.log(this.playing);
     var mp3 = document.getElementById('ap-mp3-source');
     var ogg = document.getElementById('ap-ogg-source');
     mp3.setAttribute('src',this.songs[this.playing].paths.mp3);
@@ -96,14 +95,12 @@ AdagioPlayer.prototype.create = function(){
     player = this;
     if(document.addEventListener){
         document.addEventListener("DOMContentLoaded", function() {
-            console.log('one');
             player.show();
         });
     }
     else if(document.attachEvent){
         document.attachEvent("onreadystatechange", function(){
             if (document.readyState === "complete"){
-                console.log('two');
                 document.detachEvent( "onreadystatechange", arguments.callee );
                 player.show();
             }
@@ -145,4 +142,5 @@ AdagioPlayer.prototype.attachActions = function(){
     document.getElementById("ap-next").addEventListener("click",function(){player.next()});
     document.getElementById("ap-stop").addEventListener("click",function(){player.stop()});
     document.getElementById("ap-pause").addEventListener("click",function(){player.pause()});
+    this.audioPlayer.addEventListener('ended',function(){player.next()});
 }
