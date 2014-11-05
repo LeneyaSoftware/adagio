@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca5d39ad-0787-4ef2-b238-435ea3e187cb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/adagioplayer.js" afterPath="$PROJECT_DIR$/src/adagioplayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/example/example.html" afterPath="$PROJECT_DIR$/example/example.html" />
-    </list>
+    <list default="true" id="ca5d39ad-0787-4ef2-b238-435ea3e187cb" name="Default" comment="" />
     <ignored path="jquery.musicplayer.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
