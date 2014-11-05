@@ -1,3 +1,0 @@
-function AdagioSong(options){
-  var 
-}

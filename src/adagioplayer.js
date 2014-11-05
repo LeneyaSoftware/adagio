@@ -18,6 +18,17 @@ function AdagioPlayer(options){
   this.audioPlayer = '';
 }
 
+AdagioPlayer.prototype.getSrc = function(){
+    var scripts = document.getElementsByTagName('script'),
+        script = scripts[scripts.length - 1];
+
+    if (script.getAttribute.length !== undefined) {
+        return script.src
+    }
+
+    return script.getAttribute('src', -1)
+}
+
 //play the current selected song
 AdagioPlayer.prototype.play = function(){
   var player = this.audioPlayer;
@@ -51,8 +62,6 @@ AdagioPlayer.prototype.next = function(){
 AdagioPlayer.prototype.updateSong = function(){
     var mp3 = document.getElementById('ap-mp3-source');
     var ogg = document.getElementById('ap-ogg-source');
-    console.log(this.songs);
-    console.log(this.playing);
     mp3.setAttribute('src',this.songs[this.playing].paths.mp3);
     ogg.setAttribute('src',this.songs[this.playing].paths.ogg);
 
@@ -92,7 +101,6 @@ AdagioPlayer.prototype.addSong = function(song){
 AdagioPlayer.prototype.show = function(){
     var xmlhttp;
     var player = this;
-
     if (window.XMLHttpRequest) {
         // code for IE7+, Firefox, Chrome, Opera, Safari
         xmlhttp = new XMLHttpRequest();
@@ -105,8 +113,9 @@ AdagioPlayer.prototype.show = function(){
         if (xmlhttp.readyState == 4 ) {
            if(xmlhttp.status == 200){
                document.body.innerHTML = document.body.innerHTML + xmlhttp.responseText;
-               player.attachActions();
                player.audioPlayer = document.getElementById('ap-audio-player');
+               player.attachActions();
+               player.updateSong();
            }
            else if(xmlhttp.status == 400) {
               alert('There was an error 400')
@@ -117,14 +126,16 @@ AdagioPlayer.prototype.show = function(){
         }
     }
 
-    xmlhttp.open("GET", "adagioplayer.html", true);
+    console.log(player.getSrc());
+    xmlhttp.open("GET", player.getSrc()+"adagioplayer.html", true);
     xmlhttp.send();
 }
 
 AdagioPlayer.prototype.attachActions = function(){
-    document.getElementById("ap-previous").addEventListener("click", this.previous);
-    document.getElementById("ap-play").addEventListener("click",this.play);
-    document.getElementById("ap-next").addEventListener("click",this.next);
-    document.getElementById("ap-stop").addEventListener("click",this.stop);
-    document.getElementById("ap-pause").addEventListener("click",this.pause);
+    var player = this;
+    document.getElementById("ap-previous").addEventListener("click", function(){player.previous()});
+    document.getElementById("ap-play").addEventListener("click",function(){player.play()});
+    document.getElementById("ap-next").addEventListener("click",function(){player.next()});
+    document.getElementById("ap-stop").addEventListener("click",function(){player.stop()});
+    document.getElementById("ap-pause").addEventListener("click",function(){player.pause()});
 }
