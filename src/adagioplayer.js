@@ -16,6 +16,7 @@ function AdagioPlayer(options){
   this.elapsed = options.elapsed || 0; // the current time elapsed in the current song
   this.volume = options.volume || 50;
   this.audioPlayer = '';
+  this.currentSong = this.songs[this.playing];
 
   this.create();
 }
@@ -55,15 +56,29 @@ AdagioPlayer.prototype.next = function(){
 
 //changes song from one song to anoher
 AdagioPlayer.prototype.updateSong = function(){
+    this.currentSong = this.songs[this.playing];
     var mp3 = document.getElementById('ap-mp3-source');
     var ogg = document.getElementById('ap-ogg-source');
-    mp3.setAttribute('src',this.songs[this.playing].paths.mp3);
-    ogg.setAttribute('src',this.songs[this.playing].paths.ogg);
+    mp3.setAttribute('src',this.currentSong.paths.mp3);
+    ogg.setAttribute('src',this.currentSong.paths.ogg);
+
+    this.updateUI();
 
     var player = this.audioPlayer;
     player.pause();
     player.load();
     player.play();
+}
+
+AdagioPlayer.prototype.updateUI = function(){
+    var title = document.getElementById('ap-song-title');
+    var artist = document.getElementById('ap-song-artist');
+    var album = document.getElementById('ap-song-album');
+    var song = this.songs[this.playing].paths
+
+    title.innerHTML = this.currentSong.title;
+    artist.innerHTML = this.currentSong.artist;
+    album.innerHTML = this.currentSong.album;
 }
 
 
@@ -83,7 +98,8 @@ AdagioPlayer.prototype.pause = function(){
 //stop the player all together
 AdagioPlayer.prototype.stop = function(){
     var player = this.audioPlayer;
-    player.stop();
+    player.pause();
+    player.currentTime = 0;
 }
 
 //add a song to the playlist
@@ -118,7 +134,11 @@ AdagioPlayer.prototype.show = function(){
     markup +=    '<span id="ap-pause" class="hidden"><i class="fa fa-pause"></i></span>';
     markup +=    '<span id="ap-next"><i class="fa fa-fast-forward"></i></span>';
     markup += '</div>';
-    markup += '<div class="ap-now-playing"></div>';
+    markup += '<div class="ap-now-playing">' +
+              '<span id="ap-song-title"></span>' +
+              '<span id="ap-song-artist"></span>' +
+              '<span id="ap-song-album"></span>'+
+             '</div>';
     markup += '<div class="ap-volume"></div>';
     markup+=  '</div>';
     markup+= '<audio controls class="ap-audio" id="ap-audio-player">';
