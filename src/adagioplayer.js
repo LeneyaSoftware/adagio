@@ -14,9 +14,10 @@ function AdagioPlayer(options){
   // player state settings
   this.playing = options.playing || 0; // the current position in the array of songs
   this.elapsed = options.elapsed || 0; // the current time elapsed in the current song
-  this.volume = options.volume || 50;
+  this.volume = options.volume || 50; //volume on a scale of 1 - 100
   this.audioPlayer = '';
   this.currentSong = this.songs[this.playing];
+  this.adjustVolume(this.volume);
 
   this.create();
 }
@@ -84,6 +85,7 @@ AdagioPlayer.prototype.updateUI = function(){
 
 //adjust the volume of a song
 AdagioPlayer.prototype.adjustVolume = function(volume){
+    volume = volume / 100;
   var player = this.audioPlayer;
   player.volume = volume;
 }
@@ -127,19 +129,23 @@ AdagioPlayer.prototype.create = function(){
 //append the music player to the end of the HTML body.
 AdagioPlayer.prototype.show = function(){
     var markup = '<div class="ap-player">';
-    markup += '<div class="ap-controls">';
+    markup += '<div class=" one-third ap-controls left">';
     markup +=    '<span id="ap-previous"><i class="fa fa-fast-backward"></i></span>';
     markup +=    '<span id="ap-stop"><i class="fa fa-stop"></i></span>';
     markup +=    '<span id="ap-play"><i class="fa fa-play"></i></span>';
     markup +=    '<span id="ap-pause" class="hidden"><i class="fa fa-pause"></i></span>';
     markup +=    '<span id="ap-next"><i class="fa fa-fast-forward"></i></span>';
     markup += '</div>';
-    markup += '<div class="ap-now-playing">' +
-              '<span id="ap-song-title"></span>' +
-              '<span id="ap-song-artist"></span>' +
-              '<span id="ap-song-album"></span>'+
+    markup += '<div class=" one-third center ap-now-playing left">' +
+              '<span id="ap-song-title"></span> <br />' +
+              '<span id="ap-song-artist"></span> <br />' +
+              '<span id="ap-song-album"></span> <br />'+
              '</div>';
-    markup += '<div class="ap-volume"></div>';
+    markup += '<div class="ap-volume one-third center left">'
+        +'<span class="right volume-icons"><i class="fa fa-volume-up"></i></span>'
+        +'<input id="ap-volume-slider" class="right" type=range min=0 max=100 value=100 id=fader>'
+        +'<span class="right volume-icons"><i class=" fa fa-volume-off"></i></span></div>';
+
     markup+=  '</div>';
     markup+= '<audio controls class="ap-audio" id="ap-audio-player">';
     markup+= '<source id="ap-mp3-source" src="" type="audio/mp3"/>';
@@ -162,5 +168,6 @@ AdagioPlayer.prototype.attachActions = function(){
     document.getElementById("ap-next").addEventListener("click",function(){player.next()});
     document.getElementById("ap-stop").addEventListener("click",function(){player.stop()});
     document.getElementById("ap-pause").addEventListener("click",function(){player.pause()});
+    document.getElementById("ap-volume-slider").addEventListener("change",function(){player.adjustVolume(this.value)});
     this.audioPlayer.addEventListener('ended',function(){player.next()});
 }
